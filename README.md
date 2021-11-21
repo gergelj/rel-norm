@@ -29,3 +29,34 @@ mvn package
 
 - Maven 3.8.1
 - Java 16
+
+## Task files
+
+### Example 1 - `task1.json`
+Relation `N` with labels `A`, `B`, `C`, `D`, `E` and functional dependencies `AB -> CE` and `C->D`:
+
+```json
+{
+  "name": "N",
+  "labels": ["A", "B", "C", "D", "E"],
+  "functionalDependencies": [
+    {"left": ["A", "B"], "right": ["C", "E"]},
+    {"left": ["C"], "right": ["D"]}
+  ]
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
