@@ -62,15 +62,20 @@ public class FunctionalDependencySet extends GenericSet<FunctionalDependency> {
         return projection;
     }
 
-    public FunctionalDependencySet getCanonicalSet() {
-        FunctionalDependencySet canonicalSet = new FunctionalDependencySet();
-
-        //Dekompozicija desnih strana skupa fz
+    public FunctionalDependencySet getReducedRight() {
+        FunctionalDependencySet reduced = new FunctionalDependencySet();
         items.forEach(
                 fd -> fd.getRightSide().forEach(
-                        label -> canonicalSet.add(new FunctionalDependency(fd.getLeftSide(), label))
+                        label -> reduced.add(new FunctionalDependency(fd.getLeftSide(), label))
                 )
         );
+
+        return reduced;
+    }
+
+    public FunctionalDependencySet getCanonicalSet() {
+        //Dekompozicija desnih strana skupa fz
+        FunctionalDependencySet canonicalSet = getReducedRight();
 
         //Redukcija levih strana fz
         FunctionalDependencySet reducedCanonicalSet = new FunctionalDependencySet(canonicalSet);

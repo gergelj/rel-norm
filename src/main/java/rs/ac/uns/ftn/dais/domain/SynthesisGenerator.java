@@ -62,8 +62,9 @@ public class SynthesisGenerator {
         FunctionalDependencySet jay = new FunctionalDependencySet();
         for(Partition partition: partitions) {
             FunctionalDependencySet descartes = partition.descartesProductNonTrivial();
-            jay.addAll(descartes);
-            partition.removeAll(descartes);
+            FunctionalDependencySet descartesReducedRight = descartes.getReducedRight();
+            jay.addAll(descartesReducedRight);
+            partition.removeAll(descartesReducedRight);
         }
 
         FunctionalDependencySet em = new FunctionalDependencySet();
