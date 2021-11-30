@@ -2,37 +2,45 @@ package rs.ac.uns.ftn.dais.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class KeyTreeNode {
-    private LabelSet node;
-    private boolean candidateKey = true;
+    private final LabelSet node;
+    private boolean isCandidateKey = false;
     private List<KeyTreeNode> children;
+    private final Map<LabelSet, KeyTreeNode> processed;
 
-    public KeyTreeNode(LabelSet node) {
+    public KeyTreeNode(LabelSet node, Map<LabelSet, KeyTreeNode> processed) {
         this.node = new LabelSet(node);
         this.children = new ArrayList<>();
+        this.processed = processed;
     }
 
     public void calculateKeys(LabelSet rootLabels, FunctionalDependencySet functionalDependencies) {
-        boolean isCandidate = functionalDependencies.closure(node).equals(rootLabels);
+        if(processed.containsKey(node)) {
+            KeyTreeNode processedNode = processed.get(node);
+            this.isCandidateKey = processedNode.isCandidateKey;
+            this.children = processedNode.children;
+            return;
+        }
 
-        if(isCandidate) {
-            List<Label> labels = node.stream().toList();
-            for(Label label: labels) {
-                LabelSet reducedLabels = new LabelSet(node);
-                reducedLabels.remove(label);
-                KeyTreeNode child = new KeyTreeNode(reducedLabels);
+        isCandidateKey = functionalDependencies.closure(node).equals(rootLabels);
+
+        if(isCandidateKey) {
+            for(Label label: node) {
+                LabelSet reducedLabels = node.difference(label);
+                KeyTreeNode child = new KeyTreeNode(reducedLabels, processed);
                 children.add(child);
                 child.calculateKeys(rootLabels, functionalDependencies);
             }
-        } else {
-            this.candidateKey = false;
         }
+
+        processed.put(node, this);
     }
 
     public boolean isCandidateKey() {
-        return candidateKey;
+        return isCandidateKey;
     }
 
     public void evaluate(Set<LabelSet> keySet) {

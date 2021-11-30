@@ -79,4 +79,11 @@ public class LabelSet extends GenericSet<Label> {
         difference.removeAll(other);
         return difference;
     }
+
+    public LabelSet difference(Label other) {
+        LabelSet difference = new LabelSet();
+        difference.addAll(this);
+        difference.remove(other);
+        return difference;
+    }
 }
