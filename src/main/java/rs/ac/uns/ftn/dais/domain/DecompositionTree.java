@@ -20,7 +20,7 @@ public class DecompositionTree {
         Relation initialRelation = root.getRelation();
         if(!relations.hasKey(initialRelation.getKeys())) {
             Relation lossless = new Relation(initialRelation.getName(), 0, initialRelation.getKeys().stream().findAny().get(), new FunctionalDependencySet());
-            Printer.print("Additional relation to preserve lossless connectivity:", lossless);
+            Printer.print("Additional relation to preserve lossless connectivity:", lossless, TaskMode.DECOMPOSITION);
             relations.add(lossless);
         }
 

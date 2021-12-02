@@ -46,7 +46,7 @@ public class RelationSet extends GenericSet<Relation> {
                 LabelSet labels = new LabelSet();
                 labels = relations.stream().map(Relation::getLabels).reduce(labels, LabelSet::union);
 
-                Printer.print("Preserving lossless join by joining relations", relations);
+                Printer.print("Preserving lossless join by joining relations", relations, TaskMode.DECOMPOSITION);
 
                 FunctionalDependencySet functionalDependencies = new FunctionalDependencySet();
                 //TODO: Check if FD set should be union of all sets or projection of the initial FD set on the union of labels
@@ -59,14 +59,14 @@ public class RelationSet extends GenericSet<Relation> {
     }
 
     public void printRefIntegrity() {
-        Printer.print("*********************");
-        Printer.print("Referential integrity");
+        Printer.print("*********************", TaskMode.DECOMPOSITION | TaskMode.SYNTHESIS);
+        Printer.print("Referential integrity", TaskMode.DECOMPOSITION | TaskMode.SYNTHESIS);
         for(Relation relation: items) {
             for(Relation other: items) {
                 if(!relation.equals(other)) {
                     for (LabelSet key: relation.getKeys()) {
                         if(other.getLabels().containsAll(key)) {
-                            Printer.print(String.format("%s[%s] ⊆ %s[%s]", other.getFullName(), key, relation.getFullName(), key));
+                            Printer.print(String.format("%s[%s] ⊆ %s[%s]", other.getFullName(), key, relation.getFullName(), key), TaskMode.DECOMPOSITION | TaskMode.SYNTHESIS);
                         }
                     }
                 }

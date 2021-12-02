@@ -47,21 +47,18 @@ public class Relation {
     public FunctionalDependency getDecompositionFunctionalDependency() {
         for(FunctionalDependency fd : functionalDependencies) {
             if(satisfiesP1(fd)) {
-                //Printer.print("Selecting FD by P1:", fd);
                 return fd;
             }
         }
 
         for(FunctionalDependency fd : functionalDependencies) {
             if(satisfiesP2(fd)) {
-                //Printer.print("Selecting FD by P2:", fd);
                 return fd;
             }
         }
 
         for(FunctionalDependency fd : functionalDependencies) {
             if(satisfiesP3(fd)) {
-                //Printer.print("Selecting FD by P3:", fd);
                 return fd;
             }
         }

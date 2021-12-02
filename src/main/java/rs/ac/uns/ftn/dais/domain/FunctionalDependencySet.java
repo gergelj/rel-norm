@@ -86,8 +86,8 @@ public class FunctionalDependencySet extends GenericSet<FunctionalDependency> {
                         .filter(partial -> partial.isLogicalConsequenceOf(reducedCanonicalSet))
                         .limit(1) //We must remove only the first partial fd (with the smallest possible subset on the left) that is a logical consequence of the canonical set.
                         .forEach(partial -> {
-                            Printer.print("Partial removed: " + fd.toString());
-                            Printer.print("Reduced to: " + partial.toString());
+                            Printer.print("Partial removed: " + fd.toString(), TaskMode.SYNTHESIS);
+                            Printer.print("Reduced to: " + partial.toString(), TaskMode.SYNTHESIS);
                             reducedCanonicalSet.add(partial);
                             reducedCanonicalSet.remove(fd);
                         })
@@ -100,7 +100,7 @@ public class FunctionalDependencySet extends GenericSet<FunctionalDependency> {
                 .forEach(setToRemove::add);
 
         reducedCanonicalSet.removeAll(setToRemove);
-        Printer.print("Redundant FDs:", setToRemove);
+        Printer.print("Redundant FDs:", setToRemove, TaskMode.SYNTHESIS);
 
         return reducedCanonicalSet;
     }

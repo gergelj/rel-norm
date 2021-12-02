@@ -15,9 +15,9 @@ public class SynthesisGenerator {
     }
 
     public RelationSet synthesize() {
-        Printer.print("Decomposing relation by synthesis", initialRelation);
+        Printer.print("Decomposing relation by synthesis", initialRelation, TaskMode.SYNTHESIS);
         this.canonicalSet = initialRelation.getFunctionalDependencies().getCanonicalSet();
-        Printer.print("Canonical set", canonicalSet);
+        Printer.print("Canonical set", canonicalSet, TaskMode.SYNTHESIS);
         Set<Partition> partitions = transformCanonicalSet();
         RelationSet relations = generateRelationSet(partitions);
         return relations;
@@ -25,9 +25,9 @@ public class SynthesisGenerator {
 
     private Set<Partition> transformCanonicalSet() {
         Map<LabelSet, FunctionalDependencySet> partitioned = partition(canonicalSet);
-        Printer.print("Partitions:", partitioned);
+        Printer.print("Partitions:", partitioned, TaskMode.SYNTHESIS);
         Set<Partition> joined = joinPartitions(partitioned);
-        Printer.print("Partitions after joining:", joined);
+        Printer.print("Partitions after joining:", joined, TaskMode.SYNTHESIS);
         Set<Partition> cleaned = removeTransitiveDependencies(joined);
         return cleaned;
     }
@@ -75,7 +75,7 @@ public class SynthesisGenerator {
             FunctionalDependencySet functionalDependenciesCopy = new FunctionalDependencySet(partition.getValues());
             functionalDependenciesCopy.forEach(fd -> {
                 if(fd.isLogicalConsequenceOf(em.difference(fd))) {
-                    Printer.print("Transitive FD removed:", fd);
+                    Printer.print("Transitive FD removed:", fd, TaskMode.SYNTHESIS);
                     partition.remove(fd);  // fd is transitive dependency
                 }
             });
@@ -99,7 +99,7 @@ public class SynthesisGenerator {
         //Check for lossless join
         if(!relations.hasKey(initialRelation.getKeys())) {
             Relation lossless = new Relation(initialRelation.getName(), n, initialRelation.getKeys().stream().findAny().get(), new FunctionalDependencySet());
-            Printer.print("Additional relation to preserve lossless connectivity:", lossless);
+            Printer.print("Additional relation to preserve lossless connectivity:", lossless, TaskMode.SYNTHESIS);
             relations.add(lossless);
         }
 

@@ -21,10 +21,10 @@ public class DecompositionTreeNode {
             return;
         }
 
-        Printer.print("Decomposing relation:", relation);
+        Printer.print("Decomposing relation:", relation, TaskMode.DECOMPOSITION);
 
         FunctionalDependencySet canonicalSet = relation.getFunctionalDependencies().getCanonicalSet();
-        Printer.print("Canonical set:", canonicalSet);
+        Printer.print("Canonical set:", canonicalSet, TaskMode.DECOMPOSITION);
         relation.setFunctionalDependencies(canonicalSet);
 
         FunctionalDependency selected;
@@ -33,10 +33,10 @@ public class DecompositionTreeNode {
             selected = FunctionalDependencyParser.parse();
         } else {
             selected = relation.getDecompositionFunctionalDependency();
-            Printer.print("Chosen FD:", selected);
-            Printer.print("Satisfies P1 = " + relation.satisfiesP1(selected));
-            Printer.print("Satisfies P2 = " + relation.satisfiesP2(selected));
-            Printer.print("Satisfies P3 = " + relation.satisfiesP3(selected));
+            Printer.print("Chosen FD:", selected, TaskMode.DECOMPOSITION);
+            Printer.print("Satisfies P1 = " + relation.satisfiesP1(selected), TaskMode.DECOMPOSITION);
+            Printer.print("Satisfies P2 = " + relation.satisfiesP2(selected), TaskMode.DECOMPOSITION);
+            Printer.print("Satisfies P3 = " + relation.satisfiesP3(selected), TaskMode.DECOMPOSITION);
         }
 
         LabelSet subLabels1 = selected.getLeftSide().union(selected.getRightSide());
@@ -51,11 +51,11 @@ public class DecompositionTreeNode {
                 subLabels2,
                 relation.getDecompositionSecondSubset(selected, subLabels2));
 
-        Printer.print("-------------------------------------");
-        Printer.print("Sub relations:");
-        Printer.print(subRelation1);
-        Printer.print(subRelation2);
-        Printer.print("*************************************");
+        Printer.print("-------------------------------------", TaskMode.DECOMPOSITION);
+        Printer.print("Sub relations:", TaskMode.DECOMPOSITION);
+        Printer.print(subRelation1, TaskMode.DECOMPOSITION);
+        Printer.print(subRelation2, TaskMode.DECOMPOSITION);
+        Printer.print("*************************************", TaskMode.DECOMPOSITION);
 
         DecompositionTreeNode child1 = new DecompositionTreeNode(subRelation1);
         DecompositionTreeNode child2 = new DecompositionTreeNode(subRelation2);
@@ -79,20 +79,20 @@ public class DecompositionTreeNode {
     private void printAvailableSets() {
         FunctionalDependencySet satisfied = relation.getFunctionalDependenciesP1();
         if(!satisfied.isEmpty()) {
-            Printer.print("FDs which satisfy P1:", satisfied);
+            Printer.print("FDs which satisfy P1:", satisfied, TaskMode.DECOMPOSITION);
         } else {
-            Printer.print("No FDs satisfy P1");
+            Printer.print("No FDs satisfy P1", TaskMode.DECOMPOSITION);
             satisfied = relation.getFunctionalDependenciesP2();
             if(!satisfied.isEmpty()) {
-                Printer.print("FDs which satisfy P2:", satisfied);
+                Printer.print("FDs which satisfy P2:", satisfied, TaskMode.DECOMPOSITION);
             } else {
-                Printer.print("No FDs satisfy P2");
+                Printer.print("No FDs satisfy P2", TaskMode.DECOMPOSITION);
                 satisfied = relation.getFunctionalDependenciesP3();
                 if(!satisfied.isEmpty()) {
-                    Printer.print("FDs which satisfy P3:", satisfied);
+                    Printer.print("FDs which satisfy P3:", satisfied, TaskMode.DECOMPOSITION);
                 } else {
-                    Printer.print("No FDs satisfy P3");
-                    Printer.print("You better end the algorithm altogether :/");
+                    Printer.print("No FDs satisfy P3", TaskMode.DECOMPOSITION);
+                    Printer.print("You better end the algorithm altogether :/", TaskMode.DECOMPOSITION);
                 }
             }
         }
