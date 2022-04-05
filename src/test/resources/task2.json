@@ -1,0 +1,11 @@
+{
+  "name": "N",
+  "labels": ["A", "R", "C", "X", "V", "G", "L", "M"],
+  "functionalDependencies": [
+    {"left":  ["R", "C", "X"], "right": ["A", "L"]},
+    {"left":  ["X"], "right": ["V"]},
+    {"left":  ["X"], "right": ["X", "G", "R"]},
+    {"left":  ["G"], "right": ["G", "R"]},
+    {"left":  ["V"], "right": ["L"]}
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "N",
+  "labels": ["E", "F", "C"],
+  "functionalDependencies": [
+    {"left":  ["E", "F"], "right": ["C"]},
+    {"left":  ["C"], "right": ["E"]}
+  ]
+}
