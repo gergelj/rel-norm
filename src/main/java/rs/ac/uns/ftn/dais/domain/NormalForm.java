@@ -1,9 +1,9 @@
 package rs.ac.uns.ftn.dais.domain;
 
 public enum NormalForm {
-    Undefined,
-    FirstNF,
-    SecondNF,
-    ThirdNF,
+    UNDEFINED,
+    FIRST_NF,
+    SECOND_NF,
+    THIRD_NF,
     BCNF
 }

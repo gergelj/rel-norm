@@ -136,9 +136,9 @@ public class Relation {
 
     public NormalForm getNormalForm() {
         return isBCNF() ? NormalForm.BCNF :
-                isThirdNF() ? NormalForm.ThirdNF :
-                        isSecondNF() ? NormalForm.SecondNF :
-                                isFirstNF() ? NormalForm.FirstNF : NormalForm.Undefined;
+                isThirdNF() ? NormalForm.THIRD_NF :
+                        isSecondNF() ? NormalForm.SECOND_NF :
+                                isFirstNF() ? NormalForm.FIRST_NF : NormalForm.UNDEFINED;
     }
 
     public Set<LabelSet> getKeys() {

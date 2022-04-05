@@ -22,7 +22,7 @@ public class TestNormalForm {
 
         Relation relation = new Relation("N", r, fdset);
 
-        assertEquals(NormalForm.FirstNF, relation.getNormalForm());
+        assertEquals(NormalForm.FIRST_NF, relation.getNormalForm());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class TestNormalForm {
 
         Relation relation = new Relation("N", r, fdset);
 
-        assertEquals(NormalForm.ThirdNF, relation.getNormalForm());
+        assertEquals(NormalForm.THIRD_NF, relation.getNormalForm());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class TestNormalForm {
 
         Relation relation = new Relation("N", r, fdset);
 
-        assertEquals(NormalForm.SecondNF, relation.getNormalForm());
+        assertEquals(NormalForm.SECOND_NF, relation.getNormalForm());
     }
 
     @Test
