@@ -49,9 +49,14 @@ public class RelationSet extends GenericSet<Relation> {
                 Printer.print("Preserving lossless join by joining relations", relations, TaskMode.DECOMPOSITION);
 
                 FunctionalDependencySet functionalDependencies = new FunctionalDependencySet();
-                //TODO: Check if FD set should be union of all sets or projection of the initial FD set on the union of labels
-                //FunctionalDependencySet functionalDependencies = startingDependencies.projection(labels);
-                functionalDependencies = relations.stream().map(Relation::getFunctionalDependencies).reduce(functionalDependencies, FunctionalDependencySet::union);
+                //TODO: Check if FD set should be (1) union of all sets, (2) projection of the initial FD set on the union of labels or (3) FDs depending from key only
+                // (1)
+                //functionalDependencies = relations.stream().map(Relation::getFunctionalDependencies).reduce(functionalDependencies, FunctionalDependencySet::union);
+                // (2)
+                // functionalDependencies = startingDependencies.projection(labels);
+                // (3)
+                LabelSet finalLabels = labels;
+                relations.stream().map(Relation::getKeys).forEach(keyS -> keyS.stream().map(key -> new FunctionalDependency(key, finalLabels)).forEach(functionalDependencies::add));
 
                 add(new Relation("N", order++, labels, functionalDependencies));
             }
