@@ -1,0 +1,50 @@
+\chapter{Eredmények}
+
+Az előző fejezetben leírt algoritmusok megvalósításának a helyességét úgy tudjuk leellenőrizni, ha szoftvertesztekkel támasztjuk alá a működésüket. Ezeknek a teszteknek az eredményei a ~\ref{tab:teszt} táblázatban szerepelnek. Valamennyi algoritmus metódusához rendeltünk legalább 2 tesztet, hogy megbizonyosodjunk arról, hogy a tesztek nem csak véletlenszerűen sikerültek. A teszt eseteket feladatlapból \parencite{kordic2018} szerzett feladatokra alapoztuk, melyeknek ismertek az eredményei. Ezek az ismert eredmények kerültek összehasonlításra az algoritmus által kapott eredményekkel. Amennyiben az eredmények nem egyeztek meg, azokat sikertelen teszteknek vettük; ha hiba keletkezett tesztelés során, azok a hibák száma oszlopban vannak feltüntetve. Ha bármiféle okból kifolyólag nem lehetett lefuttatni a tesztet, az az átugrott tesztek számát növelte. A tesztek mellett feltüntetett eltelt idő az egyes tesztcsoportok lefutásának az idejét jegyzi.
+
+\begin{table}
+    \centering
+    \begin{tabular}{|b{4cm}|b{1.5cm}|b{1.8cm}|b{1.5cm}|b{1.5cm}|b{1.5cm}|}
+    \hline
+    Teszt neve & Tesztek száma & Sikertelen tesztek száma & Hibák száma & Átugrott tesztek száma & Eltelt idő [ms] \\
+    \hline \hline
+    LogicalConsequence & 5 & 0 & 0 & 0 & 2 \\ \hline
+    AttributeSetClosure & 6 & 0 & 0 & 0 & 3 \\ \hline
+    Equivalence & 2 & 0 & 0 & 0 & 1 \\ \hline
+    Projection & 3 & 0 & 0 & 0 & 1 \\ \hline
+    Keys & 3 & 0 & 0 & 0 & 5 \\ \hline
+    RelationParser & 2 & 0 & 0 & 0 & 66 \\ \hline
+    2NF & 5 & 0 & 0 & 0 & 25 \\ \hline
+    3NF & 2 & 0 & 0 & 0 & 1 \\ \hline
+    NormalForm & 4 & 0 & 0 & 0 & 5 \\ \hline
+    CanonicalSet & 4 & 0 & 0 & 0 & 39 \\ \hline
+    \textbf{Decomposition} & 4 & 0 & 0 & 0 & 97 \\ \hline
+    \textbf{Synthesis} & 6 & 0 & 0 & 0 & 108 \\ \hline
+    \hline
+    TOTAL & 46 & 0 & 0 & 0 & 353 \\ \hline
+    \end{tabular}
+    \caption{Szoftvertesztelés eredménye}
+    \label{tab:teszt}
+\end{table}
+
+A \textit{SonarCloud} szoftverelemző eszköz jelentésének egy részét a ~\ref{tab:sonar} táblázat jeleníti meg. Ez a jelentés magában foglal különböző statisztikai adatokat a teljes kódbázisról, amit a \textit{SonarCloud} bizonyos belső algoritmusok és kritériumok alapján számol.
+
+\begin{table}
+    \centering
+    \begin{tabular}{|l|r|}
+    \hline
+    Jellemző & Érték \\ \hline
+    \hline
+    Összes kódsor & 1161 \\ \hline
+    Osztályok száma & 21 \\ \hline
+    Kommentek aránya & 1.4 \\ \hline
+    Code Smell & 30 \\ \hline
+    Biztonsági rések & 0 \\ \hline
+    Kódtöbbszöröződés & 0\% \\ \hline
+    Hibák & 0 \\ \hline
+    Teszt lefedettség & 76.5\% \\ \hline
+    \end{tabular}
+    \caption{SonarCloud elemzésének az eredményei}
+    \label{tab:sonar}
+\end{table}
+

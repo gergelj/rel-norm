@@ -1,0 +1,417 @@
+\chapter{Elméleti megalapozás}
+\label{ch:elmelet}
+
+Ez a fejezet alapvető fogalmakat, folyamatokat és algoritmusokat dolgoz fel, amelyek elengedhetetlenek voltak a végső szoftver kifejlesztése közben.
+
+\section{A relációs adatmodell alapvető fogalmai}
+
+\textit{Relációs séma} \index{relációs séma (ang. \textit{relation schema})} egy rendezett pár $(R,C)$, ahol $R$ attribútumhalmazt, $C$ pedig kényszerhalmazt jelöl \parencite{mogin1996}. Relációs séma megjelenési formája a \textit{reláció} \index{reláció (ang. \textit{relation})}, amely korlátolt számú \textit{sort} \index{sor (ang. \textit{tuple})} tartalmaz \parencite{mogin1996}.
+
+\textit{Relációs adatbázis séma} \index{relációs adatbázis séma (ang. \textit{relational database schema})} egy rendezett pár $(S,I)$, ahol $S$ relációs séma halmazt, $I$ pedig relációközi kényszerhalmazt jelöl \parencite{mogin1996}. Relációs adatbázis séma megjelenési formája a \textit{relációs adatbázis} \index{relációs adatbázis (ang. \textit{relational database})} \parencite{mogin1996}.
+
+\textit{Funkcionális függőségek} (röviden függőségek) \index{funkcionális függőségek (ang. \textit{functional dependency})} a relációs sémák integritását őrzik, más szóval a relációkban tárolt adatok közt vezetnek be összefüggéseket. Ha egy adott relációban egy funkcionális függőséget $f:X \to Y$ szemlélünk, akkor $X$ jelöli a baloldali-, míg  $Y$ a jobboldali attribútumhalmazt, melyek között funkcionális függőség van. Ebből kifolyólag a szóban forgó reláció bármely két sorára ($u$ és $v$) érvényes a ~\ref{eq:dependency} képlet \parencite{mogin1996}. A függőségek megjelölésénél általában elhanyagoljuk a függőség megnevezését, így $f:X \to Y$ helyett csak $X \to Y$ írunk.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    (\forall u,v \in r)(u[X]=v[X] \implies u[Y]=v[Y])
+  \end{equation}
+  \caption{\label{eq:dependency}}
+\end{equ}
+
+Egy funkcionális függőség $X \to Y$ akkor \textit{triviális}, ha érvényes  $Y \subseteq X$.
+
+Amennyiben egy relációban érvényes egy bizonyos $F$ függőséghalmaz, és egy szemlélt $f$ függőség az $F$ \textit{igaz funkcionális függősége} \index{igaz funkcionális függőség (ang. \textit{true dependency})}, akkor az adott reláción érvényes az $f$ függőség is \parencite{gajdos2019}. Ezt következőképp jelöljük: $F \models f$. Másik meghatározás szerint ez azt jelenti, hogy $f$ \textit{logikai következménye} \index{logikai következmény (ang. \textit{logical consequence})} az $F$ függőséghalmaznak \parencite{mogin1996}. 
+
+Bármelyik függőséghalmazon elvégezhetjük a relációs algebra \textit{projekció} \index{projekció (ang. \textit{projection})} műveletét. A ~\ref{eq:projection} képlet mutatja be az $F$ függőséghalmaz projekcióját az $X$ attribútumhalmazra.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    F|_{X} = \{V \to W \mid F \models V \to W \wedge VW \subseteq X\}
+  \end{equation}
+  \caption{\label{eq:projection}}
+\end{equ}
+
+\textit{Megjegyzés}: az attribútumhalmazok úniójának (pl. $V \cup W$) helyett a rövidített megjelölést ($VW$) használjuk a továbbiakban.
+
+Azt a halmazt ~\ref{eq:setclosure}, amely az $F$ függőséghalmaz összes igaz függőségét (logikai következményét) tartalmazza, az $F$ \textit{fuggőséghalmaz lezártjának} \index{fuggőséghalmaz lezártja (ang. \textit{dependency set closure})} hívják \parencite{mogin1996}.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    F^{+}=\{f \mid F \models f\}
+  \end{equation}
+  \caption{\label{eq:setclosure}}
+\end{equ}
+
+Két függéshalmaz ekvivalens, amennyiben érvényes a ~\ref{eq:equiv} képlet.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    F_1 \equiv F_2 \iff F_1^+ = F_2^+
+  \end{equation}
+  \caption{\label{eq:equiv}}
+\end{equ}
+
+Egy tetszőleges $X$ \textit{attribútumhalmaz lezártja} \index{attribútumhalmaz lezártja (ang. \textit{attribute set closure})} az $F$ függéshalmazra való tekintettel a ~\ref{eq:closure} képlettel van definiálva.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    X_F^+ = \{A \in \textbf{U} \mid F \models X \to A\}
+  \end{equation}
+  \caption{\label{eq:closure}}
+\end{equ}
+
+Az attribútumhalmaz lezártjának a kiszámolásához két lépést használunk:
+
+\begin{enumerate}
+    \item $X_0 \gets X$
+    \item $X_{i+1} \gets X_i \cup \{A \in \textbf{U} \mid (\exists V \to W \in F)(V \subseteq X_i \wedge A \in W)\}$
+\end{enumerate}
+
+Az $X_n$ megjelölést a fenti lépéseknél az $n$-edik ciklust jelöli. A 2. lépést mindaddig kell ismételni, amíg az $X_{i+1}$ és $X_i$ halmazok különböznek.
+
+Az $X \to Y$ függőség \textit{részleges függőség}\index{részleges függőség (ang. \textit{partial dependency})}, ha érvényes $(\exists X' \subset X)(X' \to Y \in F)$.
+
+Az $X \to Z$ függőség \textit{tranzitív függőség}\index{tranzitív függőség (ang. \textit{transitive dependency})}, ha érvényes $(F \models X \to Y \wedge F \models Y \to Z \wedge F \nvDash Y \to X \wedge Z \notin XY)$.
+
+Az $X$ attribútumhalmaz a $(R,F)$ relációs séma \textit{kulcsa}\index{kulcs (ang. \textit{key})}, amennyiben érvényes:
+
+\begin{enumerate}
+    \item $F \models X \to R$
+    \item $(\forall X' \subset X)(F \nvDash X' \to R)$
+\end{enumerate}
+
+Relációs séma kulcsainak a kiszámolásához definiálnunk kell egy redukció műveletet ~\ref{eq:reductionop}. Ez a művelet egy attribútumhalmaz ($X$) minimális attribútumhalmazát határozza meg, amely nem tartalmaz felesleges attribútumokat (egy előre megadott $F$ függéshalmazra tekintettel).
+
+\begin{equ}[!ht]
+  \begin{equation}
+    \text{Red(X)}: (\forall A \in X)(A \in (X \setminus \{A\})^+_F \implies X \gets X \setminus \{A\})
+  \end{equation}
+  \caption{\label{eq:reductionop}}
+\end{equ}
+
+A relációs séma kulcsainak a kiszámolásához használt algoritmus:
+
+\begin{enumerate}
+    \item $X \gets R$
+    \item $(\forall X \in K)(\forall V \to W \in F)(X \cap W \neq \emptyset \implies X_{newk} \gets (X \setminus W)V)$
+    \item $K \gets K \cup \{Red(X_{newk})\}$
+\end{enumerate}
+
+\textit{Elsődleges attribútumnak} \index{elsődleges attribútum (ang. \textit{primary attribute})} nevezünk minden olyan attribútumot, amely a relációs séma kulcsát alkotja (~\ref{eq:primaryattr} képlet). \textit{Másodlagos attribútumnak} \index{másodlagos attribútum (ang. \textit{non-primary attribute})} nevezünk minden attribútumot, amely nem alkotja a relációs séma egyik kulcsát sem.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    K_{pr} = \bigcup_{K \in \mathcal{K}} (K)
+  \end{equation}
+  \caption{\label{eq:primaryattr}}
+\end{equ}
+
+\section{Normálformák}
+
+A \textit{normálformák} \index{normálforma (ang. \textit{normal forms})} megszorítások a relációs séma tulajdonságaira vonatkozóan annak érdekében, hogy a sémákra illeszkedő relációkkal végzett műveletek során egyes nemkívánatos jelenségeket elkerülhessünk \parencite{gajdos2019}. Ezeket a nemkívánatos jelenségeket anomáliáknak hívják és beszúrási, módosítási vagy törlési műveletek során bukkanhatnak fel. Káros hatásuk akár az adott műveletek ellehetetlenítését is jelentheti. Ebben a dolgozatban a következő normálformákat mutatjuk be: \textit{1NF}, \textit{2NF}, \textit{3NF} és \textit{BCNF}. 
+
+\subsection{1NF}
+
+Az $N(R,F)$ relációs séma kielégíti az \textit{1NF} (első normálforma) feltételét, amennyiben az $R$ halmazban kizárólag atomi értékeket hordozó attribútumok szerepelnek \parencite{mogin2004}. Ez azt jelenti, hogy egy attribútum értéke sem lehet tömb vagy halmaz alakú. Az \textit{1NF} normálforma előfeltétele az összes többi normálformának, és ezt a tényt nem fogjuk külön kiemelni minden egyes normálformánál.
+
+\subsection{2NF}
+
+Az $N(R,F)$ relációs séma kielégíti a \textit{2NF} (második normálforma) feltételét, amennyiben minden másodlagos attribútum teljesen függ a relációs séma összes kulcsától (~\ref{eq:2nf} képlet) \parencite{mogin2004}.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    (\forall A \in R \setminus K_{pr})(\forall X \in K)(\forall Y \subset X)(F \nvDash Y \to A)
+  \end{equation}
+  \caption{\label{eq:2nf}}
+\end{equ}
+
+\subsection{3NF}
+
+Az $N(R,F)$ relációs séma kielégíti a \textit{3NF} (harmadik normálforma) feltételét, amennyiben minden másodlagos attribútum nem tranzitív függőségben van a relációs séma összes kulcsával (~\ref{eq:3nf} képlet) \parencite{mogin2004}.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    (\forall A \in R \setminus K_{pr})(\forall X \in K)(\forall Y \subseteq R \setminus \{A\})(F \models Y \to A \implies F \models Y \to X)
+  \end{equation}
+  \caption{\label{eq:3nf}}
+\end{equ}
+
+Létezik egy alternatív definíciója is a \textit{3NF} normálformának. E definíció szerint minden nem triviális függőség bal oldalának tartalmaznia kell a relációs séma egy kulcsát, amennyiben a jobb oldali attribútumhalmaz tartalmaz másodlagos attribútumot (~\ref{eq:3nfalt} képlet) \parencite{mogin2004}.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    (\forall A \in R \setminus K_{pr})(\forall Y \subseteq R \setminus \{A\})(F \models Y \to A \implies (\exists X \in K)(X \subseteq Y))
+  \end{equation}
+  \caption{\label{eq:3nfalt}}
+\end{equ}
+
+\subsection{BCNF}
+
+Az $N(R,F)$ relációs séma kielégíti a \textit{BCNF} -- Boyce\footnote{Raymond F. Boyce (1946–-1974) amerikai informatikus}-Codd\footnote{Edgar F. Codd (1923–-2003) angol informatikus} normálformát, amennyiben minden nem triviális függőség bal oldala tartalmazza a relációs séma egy kulcsát (~\ref{eq:bcnf} képlet) \parencite{mogin2004}.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    (\forall A \in R)(\forall Y \subseteq R \setminus \{A\})(F \models Y \to A \implies (\exists X \in K)(X \subseteq Y))
+  \end{equation}
+  \caption{\label{eq:bcnf}}
+\end{equ}
+
+\subsection{Normálformák összefüggései}
+
+Az irodalomban levezetett bizonyítások alapján elmondható, hogy minden alacsonyabb szintű normálforma elengedhetetlen egy magasabb szintű normálforma teljesítéséhez (~\ref{eq:nf} képlet) \parencite{mogin2004}.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    \begin{aligned}
+        \text{BCNF} &\implies \text{3NF} \implies \text{2NF} \implies \text{1NF} \\
+        \neg \text{1NF} &\implies \neg \text{2NF} \implies \neg \text{3NF} \implies \neg \text{BCNF}
+    \end{aligned}
+  \end{equation}
+  \caption{\label{eq:nf}}
+\end{equ}
+ 
+\section{Normalizációs algoritmusok}
+
+Az adatbázisok normalizálásának célja, hogy egy (vagy több) relációs sémát egy bizonyos normálformára vezessen, a nemkívánatos anomáliák elkerülése érdekében. A következőkben bemutatott normalizációs algoritmusok leírásai az \textit{Adatbázis tervezés alapjai} \parencite{mogin2004} valamint \textit{Adatbázisok 2 laborgyakorlati munkafüzetből} \parencite{celikovic2021} származnak.
+
+\subsection{Szintézis}
+
+A szintézis algoritmus kiindulópontja az ún. univerzális relációs séma $(\textbf{U},\textbf{F})$, ahol az $\textbf{U}$ az univerzális attribútumhalmazt, az $\textbf{F}$ pedig az univerzális függéshalmazt jelöli. A szintézis elvégeztével $n$ darab relációs sémát kapunk, melyek kielégítik a \textit{3NF} normálformát. A relációközi megszorításokkal kiegészülve megkapjuk a szintézis kimenetét, vagyis az adatbázis sémát (~\ref{eq:dbschema} képlet).
+
+\begin{equ}[!ht]
+  \begin{equation}
+    S = \{(R_i, K_i) \mid i \in \{1, 2, ..., n\}\}
+  \end{equation}
+  \caption{\label{eq:dbschema}}
+\end{equ}
+
+A szintézis algoritmusa néhány lépésből áll:
+
+\begin{enumerate}
+    \item \textit{Minimális függéshalmaz} \index{minimális függéshalmaz (ang. \textit{canonical set})} meghatározása
+    
+Fontos megjegyezni, hogy a minimális függéshalmazban ($F_{min}$) ekvivalens a kiinduló függéshalmazzal (~\ref{eq:syn1-1} képlet). A minimális függéshalmazban a függőségek jobboldali attribútumhalmazában csak egyetlen attribútum található (~\ref{eq:syn1-2} képlet), a függőségek teljes függőségek (~\ref{eq:syn1-3} képlet), valamint nincs olyan függőség, amelyik elhagyható (~\ref{eq:syn1-4} képlet) \parencite{gajdos2019}.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    F \equiv F_{min}
+  \end{equation}
+  \caption{\label{eq:syn1-1}}
+\end{equ}
+
+\begin{equ}[!ht]
+  \begin{equation}
+    (\forall X \to A \in F_{min})(A \in \textbf{U})
+  \end{equation}
+  \caption{\label{eq:syn1-2}}
+\end{equ}
+
+\begin{equ}[!ht]
+  \begin{equation}
+    (\forall X \to A \in F_{min})(\forall X' \subset X)(F \nvDash X' \to A)
+  \end{equation}
+  \caption{\label{eq:syn1-3}}
+\end{equ}
+
+\begin{equ}[!ht]
+  \begin{equation}
+    (\nexists X \to A \in F_{min})(F_{min} \setminus \{X \to A\} \equiv F_{min})
+  \end{equation}
+  \caption{\label{eq:syn1-4}}
+\end{equ}
+
+A minimális függéshalmaz fent említett tulajdonságait a következő algoritmussal érhetjük el:
+
+\linespread{1}
+\begin{lstlisting}
+for X->Y in F:
+	Fmin <- Fmin + {X->A | A in Y}
+
+for X->A in Fmin:
+	for B in A:
+		if Fmin |= X\{B}->A:
+			Fmin <- Fmin\{X->A} + {X\{B}->A}
+
+for X->A in Fmin:
+	if X->A in (Fmin\{X->A})+:
+		Fmin <- F\{X->A}
+\end{lstlisting}
+
+    \item Minimális függéshalmaz átalakítása
+
+A minimális függéshalmazt fel kell osztani partícióhalmazra (~\ref{eq:syn2-1} képlet), ahol minden egyes partícióba olyan függőségeket csoportosítunk, melyeknek a baloldali halmazai megegyeznek (~\ref{eq:syn2-2}, ~\ref{eq:syn2-3} és ~\ref{eq:syn2-4} képletek).
+
+\begin{equ}[!ht]
+  \begin{equation}
+    \textbf{G} = \{G(X_i) \mid i \in \{1, ..., n\}\}
+  \end{equation}
+  \caption{\label{eq:syn2-1}}
+  \begin{equation}
+    G(X_i) = \{Y \to A \in F_{min} \mid Y = X_i\}
+  \end{equation}
+  \caption{\label{eq:syn2-2}}
+  \begin{equation}
+    (\forall i, j \in \{1, ..., n\}) (i \neq j) \iff (X_i \neq X_j)
+  \end{equation}
+  \caption{\label{eq:syn2-3}}
+    \begin{equation}
+    (\forall Y \to A \in F_{min}) (\exists G(X_i) \in \textbf{G})(Y = X_i)
+  \end{equation}
+  \caption{\label{eq:syn2-4}}
+\end{equ}
+
+A megformált partíciókat egyesíteni kell az ekvivalens baloldali halmazok szerint, vagyis minden pár partíció $G(X_i )$ és $G(X_j)$, amelyre érvényes $(X_i)_F^+ = (X_j)_F^+$, azokat egyesítjük $G(X_i,X_j)$ partícióvá, majd a partícióhalmazt a ~\ref{eq:syn2-5} képlet szerint módosítjuk.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    \textbf{G} \gets \textbf{G} \setminus \{G(X_i), G(X_j)\} \cup \{G(X_i, X_j)\}
+  \end{equation}
+  \caption{\label{eq:syn2-5}}
+\end{equ}
+
+Miután ezeket a bizonyos partíciókat egyesítettük, felmerülhet az a veszély, hogy tranzitív függőségeket hozunk létre ezekben a partíciókban, ezért létre kell hozni egy $J$ halmazt (~\ref{eq:syn2-6} képlet), mely tartalmazza a tranzitivitás megelőzésére alkalmas függőségeket. Annak érdekében törekedünk a tranzitív függőségek felszámolására, hogy a relációs sémák teljesíteni tudják majd a \textit{3NF} normálformát. Ezeknek az újabb függőségeknek a hozzáadásával lehet, hogy sikerült kiküszöbölni a tranzitív függőségeket, de potenciálisan elhagyható függőségek jöttek létre. Az érintett partíciókból átmenetileg ki kell vonni ezeket a függőségeket, majd törölni kell a feleslegessé váltakat (~\ref{eq:syn2-7} képlet).
+
+\begin{equ}[!ht]
+  \begin{equation}
+    J = \{X_i \to X_j, X_j \to X_i\}
+  \end{equation}
+  \caption{\label{eq:syn2-6}}
+\end{equ}
+
+\begin{equ}[!ht]
+  \begin{equation}
+    G(X_i, X_j) \gets G(X_i, X_j) \setminus \big( \{X_i \to A \mid A \in X_j\} \cup \{X_j \to A \mid A \in X_i\} \big)
+  \end{equation}
+  \caption{\label{eq:syn2-7}}
+\end{equ}
+
+Az elhagyható függőségek törlése végett létrehozunk egy $M$ halmazt (~\ref{eq:syn2-8} képlet), majd ennek a halmaznak a tekintetében végezzük a függőségek egyszerűsítését – a(z) ~\ref{eq:syn1-4} képlethez hasonlóan.
+
+\begin{equ}[!ht]
+  \begin{equation}
+    M = \bigcup_{G_X \in \textbf{G}} (G_X) \cup J
+  \end{equation}
+  \caption{\label{eq:syn2-8}}
+\end{equ}
+
+Miután a megfelelő partíciókból törlésre kerültek a felesleges függőségek, visszaállítjuk a $J$ halmazbeli függőségeket a megfelelő partíciókba.
+
+    \item Relációs adatbázis séma létrehozása
+    
+Minden $G_X \in \textbf{G}$ partíció egy relációs sémát alkot, ahol az $X$ halmaz jelenti a séma kulcsát. A partíció függőségeiben előforduló attribútumok pedig a séma attribútumhalmazát képezik. A relációközi megszorításokat az idegen kulcsok megszorításai alkotja.
+
+    \item Veszteségmentes sémafelbontás megőrzése
+    
+Annak érdekében, hogy meggyőződjünk a veszteségmentes sémafelbontásról, le kell ellenőrizni, hogy bár egy relációs séma kulcsa megegyezik az univerzális relációs séma kulcsával. Ha igen, akkor veszteségmentesen bontottuk fel a sémát. Amennyiben a válasz nem, további relációs sémára lesz szükségünk, melynek kulcsa megegyezik az univerzális relációs séma egyik szabadon választott kulcsával, az attribútumhalmaz pedig a kiválasztott kulcsot képező attribútumokkal.
+
+\end{enumerate}
+
+\subsection{Dekompozíció}
+
+A dekompozíció algoritmus kiindulópontja az ún. univerzális relációs séma $(\textbf{U},\textbf{C})$, ahol az $\textbf{U}$ az univerzális attribútumhalmazt, az $\textbf{C}$ pedig az univerzális megkötéshalmazt jelöli. A $\textbf{C}$ halmaz magában foglalja az univerzális relációs séma függőségeit valamint a többértékű függőségeket is. Mivel a dolgozat csak olyan algoritmusokat taglal, amelyek legfeljebb a \textit{BCNF} normálformát elégítik ki, ezért nem fogjuk figyelembe venni a többértékű függőségeket. A dekompozíció elvégeztével $n$ darab relációs sémát kapunk, melyek kielégítik a \textit{BCNF} normálformát. A relációközi megszorításokkal kiegészülve megkapjuk a dekompozíció kimenetét, vagyis az adatbázis sémát.
+
+A dekompozíció algoritmusa:
+
+\begin{enumerate}
+    \item 	Megfelelő függőség kiválasztása
+    
+A dekompozíció lépéseinek az első eleme a megfelelő függőség kiválasztása, ami alapján felosszuk az adott relációs sémát. A kívánt $X \to Y$ függőséget három kritérium alapján tudjuk kiválasztani:
+
+    \begin{enumerate}
+        \item P1 kritérium szerint egy nemtriviális függőséget kell választanunk, ahol az Y halmaz nem szuperkulcs, valamint a függőséghalmaz meghatározott szétválasztása nem jár függőségvesztéssel (~\ref{eq:p1} képlet).
+        
+        \begin{equ}[!ht]
+            \begin{equation}
+                (Y \nsubseteq X) \wedge (R \nsubseteq X^+) \wedge \big(F^+ = (F|_{X(R \setminus Y)} \cup F|_{XY})^+ \big)
+            \end{equation}
+            \caption{\label{eq:p1}}
+        \end{equ}
+        
+        \item P2 kritérium szintén nemtriviális függőség kiválasztását terjeszti elő, melynek jobb- és baloldali attribútumhalmazainak az úniója különböznek az adott sémareláció attribútumhalmazától ($R$), valamint a függőséghalmaz meghatározott szétválasztása nem jár függőségvesztéssel (~\ref{eq:p2} képlet).
+
+        \begin{equ}[!ht]
+            \begin{equation}
+                (Y \nsubseteq X) \wedge (XY \subset R) \wedge \big(F^+ = (F|_{X(R \setminus Y)} \cup F|_{XY})^+ \big)
+            \end{equation}
+            \caption{\label{eq:p2}}
+        \end{equ}      
+        
+        \item P3 kritérium  szintén nemtriviális függőség kiválasztását terjeszti elő, ahol az $Y$ halmaz nem szuperkulcs (~\ref{eq:p3} képlet). Az előző két kritériummal ellentétben a P3 kritérium nem szabja feltételként a függőségvesztés kitételt.
+
+        \begin{equ}[!ht]
+            \begin{equation}
+                (Y \nsubseteq X) \wedge (R \nsubseteq X^+)
+            \end{equation}
+            \caption{\label{eq:p3}}
+        \end{equ}    
+        
+    \end{enumerate}
+
+A megfelelő függőség kiválasztásánál ügyelni kell arra, hogy minél magasabb kritérium teljesüljön.
+
+    \item Relációs séma szétválasztása a kiválasztott függőség alapján
+    
+Amennyiben sikerült kiválasztani a megfelelő $X \to Y$ függőséget, akkor az adott relációs sémát $(R,F)$ a $r_1$ és $r_2$ relációs sémákra tudjuk felbontani (~\ref{eq:r1r2} képlet).
+
+\begin{equ}[!ht]
+    \begin{equation}
+        \begin{aligned}
+            r_1: &(R_1, F_1) = (XY, F|_{XY}) \\
+            r_2: &(R_2, F_2) = ((R \setminus Y)X, F|_{(R \setminus Y)X})
+        \end{aligned}
+    \end{equation}
+    \caption{\label{eq:r1r2}}
+\end{equ}
+
+Ilyen felbontás mellett teljesülnek a veszteségmentes összevonás feltételei (~\ref{eq:lossless} képlet), ahol a $K_1$ és $K_2$ halmazok a megfelelő relációs sémák kulcshalmazait jelölik.
+
+\begin{equ}[!ht]
+    \begin{equation}
+        (R_1 \cup R_2 = R) \wedge (K_1 \subseteq R_1 \cap R_2 \vee K_2 \subseteq R_1 \cap R_2)
+    \end{equation}
+    \caption{\label{eq:lossless}}
+\end{equ}
+    
+    \item Normálforma vizsgálat
+    
+A szétbontott relációs sémákat normálforma vizsgálat alá helyezzük, és amennyiben nem teljesítik a \textit{BCNF} normálformát, további dekompozíciónak vetjük alá a sémákat, kezdve az algoritmusban szereplő 1. ponttal. Ezt a folyamatot rekurzív módon hajtjuk végre, vagyis az első pontban szereplő séma helyét a második pontban kapott sémák veszik át (amennyiben azok nem teljesítik a \textit{BCNF} normálformát). Azokat a relációs sémákat, amelyek teljesítik a \textit{BCNF} normálformát, elvégzetteknek (dekomponáltaknak) tekintünk.
+    
+    \item A dekompozíciós fa kiértékelése
+    
+A relációs sémák szétválasztása során bináris fa jön létre, melynek levelei alkotják a dekomponált relációs sémahalmazt. Ezt a sémahalmazt további kiértékelésnek vetjük alá, mégpedig az ekvivalens kulccsal rendelkező sémákat összevonjuk. Ezzel a lépéssel visszanyerhetünk időközben elvesztett függőségeket – amennyiben a P3 kritérium alapján tudtunk csak függőséget választani a dekompozíció során. Ezekkel a visszanyert függőségekkel viszont kockáztatjuk az elért \textit{BCNF} normálformát, de a függőségek megőrzése érdekében beáldozhatjuk ezeket a sémákat. 
+	
+	\item Veszteségmentes sémafelbontás megőrzése
+	
+A szintézis algoritmusához hasonlóan meg kell győződjünk a veszteségmentes sémafelbontásról, amit úgy érünk el, hogy leellenőrizzük, hogy bár egy relációs séma kulcsa megegyezik az univerzális relációs séma kulcsával.
+    
+\end{enumerate}
+
+\section{Szoftvermodellezési szempontok}
+
+Szoftvermodellezéshez a \textit{UML} \index{UML (ang. \textit{Unified Modeling Language})} modellnyelvet használtam, hogy egy konkrét programnyelvtől független leírást mutathassak be a fejlesztett szoftverről. Mivel a szoftver tervezésétől kezdve objektum-orientált programnyelvi paradigmában gondolkodtam, ezért adatmodellezéshez osztálydiagramot használtam. Az adatbázis normalizálási algoritmusokat szekvenciadiagramokkal terveztem ki.
+
+A következő fejezet részletesen bemutatja a szoftverfejlesztéshez használt diagramokat, valamint konkrét kódrészleteket is magában foglal.
+
+\section{Szoftvertesztelés}
+
+A \textit{szoftverteszteléssel} \index{szoftvertesztelés} meg tudjuk előzni azokat a hibákat, amelyek még a szoftver üzembe helyezése előtt jelentkeznek. Többféle tesztelési módszer létezik, de ebben a dolgozatban a unit-tesztekre fókuszálunk. A \textit{unit-tesztek} \index{unit-tesztek (ang. \textit{unit tests})} olyan automatizált tesztek, melyek kisebb egységnyi kódrészletet gyorsan és elszigetelt módon ellenőriznek \parencite{khorikov2020}.
+
+A unit-tesztek három fázisból állnak:
+
+\begin{enumerate}
+    \item előkészítés (ang. \textit{arrange}) –- a tesztben szereplő objektumok létrehozása, változók értékeinek a megadása;
+    \item végrehajtás (ang. \textit{act}) – a tesztelni kívánt algoritmus metódusának az előhívása;
+	\item megerősítés/megkötés (ang. \textit{assert}) – a kapott és a kívánt eredmények összehasonlítása.
+\end{enumerate}
+	
+Egy unit-teszt akkor lesz sikeres, ha a kapott és kívánt eredmények összehasonlítása helytálló.
+
+A dolgozat célkitűzései között szerepel a nagy lefedettségű tesztek alkalmazása. A \textit{kód lefedettség} \index{kód lefedettség (ang. \textit{code coverage})} egy másik szempont, ami alapján vizsgáljuk egy szoftver minőségét.  Ennek érdekében bevezetünk egy kód lefedettségi mérőszámot, amely megmutatja a tesztek lefedettségének a mértékét. Ez a mérték egy arány a tesztek által lefuttatott és a teljes kódbázis sorainak száma között (~\ref{eq:coverage} képlet) \parencite{khorikov2020}.
+
+\begin{equ}[!ht]
+    \begin{equation}
+        \text{kód lefedettség} = \frac{\text{lefuttatott kódsorok száma}}{\text{kódbázis sorainak a száma}}
+    \end{equation}
+    \caption{\label{eq:coverage}}
+\end{equ}
+
