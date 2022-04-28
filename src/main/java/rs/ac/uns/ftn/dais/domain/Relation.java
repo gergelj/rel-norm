@@ -1,7 +1,6 @@
 package rs.ac.uns.ftn.dais.domain;
 
 import rs.ac.uns.ftn.dais.exception.CriteriaNotSatisfiedException;
-
 import java.util.Objects;
 import java.util.Set;
 
@@ -76,12 +75,9 @@ public class Relation {
             return true;
         }
 
-        return functionalDependencies.stream().allMatch(fd -> {
-           if(nonPrimaryLabels.containsAll(fd.getRightSide())) {
-               return getKeys().stream().allMatch(key -> fd.getLeftSide().containsAll(key) || fd.getLeftSide().stream().noneMatch(key::contains));
-           } else {
-               return true;
-           }
+        return getKeys().stream().allMatch(key -> {
+            Set<LabelSet> subsets = key.getSubsets();
+            return subsets.stream().allMatch(subset -> nonPrimaryLabels.stream().noneMatch(nonPrimaryLabel -> functionalDependencies.closure(subset).contains(nonPrimaryLabel)));
         });
     }
 

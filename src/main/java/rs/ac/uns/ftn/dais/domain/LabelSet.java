@@ -25,6 +25,10 @@ public class LabelSet extends GenericSet<Label> {
         super(Arrays.stream(labels).map(Label::new).toList());
     }
 
+    public LabelSet(List<String> labels) {
+        super(labels.stream().map(Label::new).toList());
+    }
+
     //Idea from: https://www.baeldung.com/java-power-set-of-a-set#3-binary-representation
     public Set<LabelSet> getPowerSet() {
         int size = this.size();
@@ -85,5 +89,11 @@ public class LabelSet extends GenericSet<Label> {
         difference.addAll(this);
         difference.remove(other);
         return difference;
+    }
+
+    public Set<LabelSet> getSubsets() {
+        Set<LabelSet> powerSet = getPowerSet();
+        powerSet.remove(this);
+        return powerSet;
     }
 }
