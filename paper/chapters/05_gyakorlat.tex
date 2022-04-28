@@ -131,20 +131,18 @@ A reláció \lstinline{isSecondNF} metódusával kapjuk meg azt az információt
 \linespread{1}
 \begin{lstlisting}[language=Java]
 public boolean isSecondNF() {
-	LabelSet nonPrimaryLabels = getNonPrimaryLabels();
-	if(nonPrimaryLabels.isEmpty()) {
-		return true;
-	}
+    LabelSet nonPrimaryLabels = getNonPrimaryLabels();
+    if(nonPrimaryLabels.isEmpty()) {
+        return true;
+    }
 
-	return functionalDependencies.stream().allMatch(fd -> {
-		if(nonPrimaryLabels.containsAll(fd.getRightSide())) {
-			return getKeys().stream().allMatch(key -> 
-				fd.getLeftSide().containsAll(key) || 
-				fd.getLeftSide().stream().noneMatch(key::contains));
-		} else {
-			return true;
-		}
-	});
+    return getKeys().stream().allMatch(key -> {
+        Set<LabelSet> subsets = key.getSubsets();
+        return subsets.stream().allMatch(subset -> 
+            nonPrimaryLabels.stream().noneMatch(nonPrimaryLabel ->
+                functionalDependencies.closure(subset)
+                    .contains(nonPrimaryLabel)));
+    });
 }
 \end{lstlisting}
 

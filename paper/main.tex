@@ -7,7 +7,6 @@
 \usepackage{caption}
 \usepackage{marginnote}
 \usepackage{listings}
-\usepackage{hyperref}
 \usepackage{color}
 \usepackage{newtxtext,newtxmath} % times new roman imitation
 \usepackage{graphicx}
@@ -18,6 +17,13 @@
 \usepackage{fancyhdr}
 \usepackage{makeidx} % indexing enable
 \graphicspath{ {images/} }
+\usepackage{emptypage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
 
 \usepackage[totoc]{idxlayout}
 
@@ -67,6 +73,8 @@
             sorting=nyt]{biblatex}
 \addbibresource{bibliography.bib}
 
+\usepackage{hyperref}
+
 \renewcommand{\labelenumii}{\roman{enumii})} % list: second level is roman numerals
 
 \title{
@@ -79,9 +87,14 @@ RELNORM: RELÁCIÓS ADATBÁZISOK NORMALIZÁLÁSÁHOZ HASZNÁLT ESZKÖZ AZ OKTAT�
 \begin{document}
 
 \input{chapters/00_0_title}
+\blankpage
 \input{chapters/00_1_belso}
+\blankpage
+\blankpage
 \input{chapters/00_2_abstract}
+\blankpage
 \input{chapters/00_3_kivonat}
+\blankpage
 \selectlanguage{hungarian}
 %\addtocontents{toc}{\protect\thispagestyle{empty}}
 \pagenumbering{gobble}
