@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.dais.domain;
 
+import java.util.List;
 import java.util.Objects;
 
 public class FunctionalDependency {
@@ -7,6 +8,11 @@ public class FunctionalDependency {
     private final LabelSet rightSide;
 
     public FunctionalDependency(String[] leftSide, String[] rightSide) {
+        this.leftSide = new LabelSet(leftSide);
+        this.rightSide = new LabelSet(rightSide);
+    }
+
+    public FunctionalDependency(List<String> leftSide,List<String> rightSide) {
         this.leftSide = new LabelSet(leftSide);
         this.rightSide = new LabelSet(rightSide);
     }
