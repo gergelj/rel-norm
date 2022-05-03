@@ -6,7 +6,7 @@ További szempont volt egy automatizált kódépítő eszköz használata, amell
 
 \section{Osztálydiagram}
 
-A \textit{RelNorm} fejlesztése az osztálydiagrammal (~\ref{fig:class} ábra) kezdődött. Az osztálydiagramon -- az átláthatóság érdekében -- mellőztük a konstruktőrok és egyéb \lstinline{get}/\lstinline{set} metódusok leírását, valamint a már említett \textit{Java} beépített metódusokét is. A \lstinline{Label} és a \lstinline{LabelSet} osztályok elnevezése megegyezik az irodalomban használt elnevezésekkel: attribute és attribute set. A \lstinline{Set} interface a \lstinline{java.util} csomagból került felhasználásra.
+A \textit{RelNorm} fejlesztése az osztálydiagrammal (\ref{fig:class} ábra) kezdődött. Az osztálydiagramon -- az átláthatóság érdekében -- mellőztük a konstruktőrok és egyéb \lstinline{get}/\lstinline{set} metódusok leírását, valamint a már említett \textit{Java} beépített metódusokét is. A \lstinline{Label} és a \lstinline{LabelSet} osztályok elnevezése megegyezik az irodalomban használt elnevezésekkel: attribute és attribute set. A \lstinline{Set} interface a \lstinline{java.util} csomagból került felhasználásra.
 
 \begin{figure}
     \centering
@@ -19,7 +19,7 @@ A \textit{RelNorm} fejlesztése az osztálydiagrammal (~\ref{fig:class} ábra) k
 
 Ebben a részben az előző fejezetben leírt alapvető relációs fogalmak és műveletek algoritmusainak a megvalósítása kerül bemutatásra.
 
-Az attribútumhalmaz lezártjának a definícióját (~\ref{eq:closure} képlet) a függőséghalmaz \lstinline{closure} metódusával tudjuk kiszámolni:
+Az attribútumhalmaz lezártjának a definícióját (\ref{eq:closure} képlet) a függőséghalmaz \lstinline{closure} metódusával tudjuk kiszámolni:
 
 \linespread{1}
 \begin{lstlisting}[language=Java]
@@ -39,7 +39,7 @@ public LabelSet closure(LabelSet labels) {
 }
 \end{lstlisting}
 
-A függőséghalmaz projekcióját (~\ref{eq:projection} képlet) a függőséghalmaz \lstinline{projection} metódusával tudjuk kiszámolni:
+A függőséghalmaz projekcióját (\ref{eq:projection} képlet) a függőséghalmaz \lstinline{projection} metódusával tudjuk kiszámolni:
 
 \linespread{1}
 \begin{lstlisting}[language=Java]
@@ -61,7 +61,7 @@ public FunctionalDependencySet projection(LabelSet labels) {
 
 A fenti kódrészletben szerepel egy \lstinline{getPowerSet} nevezetű metódus, amely egy adott attribútumhalmaz összes részhalmazának a halmazát számolja ki \parencite{baeldung2020}.
 
-Az igaz következmény, azaz egy függőséghalmazhoz viszonyított függőség logikai következényének a definícóját (~\ref{eq:setclosure} képlet) az attribútumhalmaz \lstinline{isLogicalConsequenceOf} metódusával lehet kiszámolni.
+Az igaz következmény, azaz egy függőséghalmazhoz viszonyított függőség logikai következényének a definícóját (\ref{eq:setclosure} képlet) az attribútumhalmaz \lstinline{isLogicalConsequenceOf} metódusával lehet kiszámolni.
 
 \linespread{1}
 \begin{lstlisting}[float,floatplacement=H,language=Java]
@@ -71,7 +71,7 @@ public boolean isLogicalConsequenceOf(FunctionalDependencySet dependencies) {
 }
 \end{lstlisting}
 
-Két függőséghalmaz egybevágóságát (~\ref{eq:equiv} képlet) a függőséghalmaz equivalent metódusa számolja ki.
+Két függőséghalmaz egybevágóságát (\ref{eq:equiv} képlet) a függőséghalmaz equivalent metódusa számolja ki.
 
 \linespread{1}
 \begin{lstlisting}[float,floatplacement=H,language=Java]
@@ -82,7 +82,7 @@ public boolean equivalent(FunctionalDependencySet other) {
 }
 \end{lstlisting}
 
-A relációs sémák kulcshalmazához az előző fejezetben leírt algoritmust (~\ref{eq:reductionop} képlet) használjuk. A megvalósításhoz elengedhetetlen egy ún. \textit{kulcsfa} \index{kulcsfa (ang. \textit{key tree})} használata. Ez a kulcsfa olyan csomópontokból áll össze, melyek tartalmaznak egy atribútumhalmazt, információt a kulcsjelölti státuszukról valamint egy kollekciót a gyermekeiről. A gyermek csomópont pontosan egy attribútummal kevesebbet tartalmaz a szülőtől. Ha egy megadott attribútumhalmaz $U=\{A,B,C,D\}$ és függőséghalmaz $F=\{AC \to B,BC \to D,A \to B,B \to A\}$ kulcsait szeretnénk megkapni ($K=\{AC,BC\}$), akkor a(z) ~\ref{fig:keytree} ábra mutatja be ennek a példának a kulcsfáját.
+A relációs sémák kulcshalmazához az előző fejezetben leírt algoritmust (\ref{eq:reductionop} képlet) használjuk. A megvalósításhoz elengedhetetlen egy ún. \textit{kulcsfa} \index{kulcsfa (ang. \textit{key tree})} használata. Ez a kulcsfa olyan csomópontokból áll össze, melyek tartalmaznak egy atribútumhalmazt, információt a kulcsjelölti státuszukról valamint egy kollekciót a gyermekeiről. A gyermek csomópont pontosan egy attribútummal kevesebbet tartalmaz a szülőtől. Ha egy megadott attribútumhalmaz $U=\{A,B,C,D\}$ és függőséghalmaz $F=\{AC \to B,BC \to D,A \to B,B \to A\}$ kulcsait szeretnénk megkapni ($K=\{AC,BC\}$), akkor a(z) \ref{fig:keytree} ábra mutatja be ennek a példának a kulcsfáját.
 
 \begin{figure}
     \centering
@@ -126,7 +126,7 @@ private LabelSet getNonPrimaryLabels() {
 }
 \end{lstlisting}
 
-A reláció \lstinline{isSecondNF} metódusával kapjuk meg azt az információt, hogy egy adott reláció teljesíti-e a \textit{2NF} normálformát annak definíciója szerint (~\ref{eq:2nf} képlet).
+A reláció \lstinline{isSecondNF} metódusával kapjuk meg azt az információt, hogy egy adott reláció teljesíti-e a \textit{2NF} normálformát annak definíciója szerint (\ref{eq:2nf} képlet).
 
 \linespread{1}
 \begin{lstlisting}[language=Java]
@@ -146,7 +146,7 @@ public boolean isSecondNF() {
 }
 \end{lstlisting}
 
-A \textit{3NF} normálformának az alternatív definíciója alapján (~\ref{eq:3nfalt} képlet) készült el a relációs séma \lstinline{isThirdNF} metódusa.
+A \textit{3NF} normálformának az alternatív definíciója alapján (\ref{eq:3nfalt} képlet) készült el a relációs séma \lstinline{isThirdNF} metódusa.
 
 \linespread{1}
 \begin{lstlisting}[language=Java]
@@ -167,7 +167,7 @@ public boolean isThirdNF() {
 }
 \end{lstlisting}
 
-A \textit{BCNF} normálforma definíciója (~\ref{eq:bcnf} képlet) alapján létrejött \lstinline{isBCNF} metódussal számítható ki, hogy egy relációs séma teljesíti-e a \textit{BCNF} normálformát.
+A \textit{BCNF} normálforma definíciója (\ref{eq:bcnf} képlet) alapján létrejött \lstinline{isBCNF} metódussal számítható ki, hogy egy relációs séma teljesíti-e a \textit{BCNF} normálformát.
 
 \linespread{1}
 \begin{lstlisting}[language=Java]
@@ -179,7 +179,7 @@ public boolean isBCNF() {
 }
 \end{lstlisting}
 
-Tekintettel a ~\ref{eq:nf} képletekre, egy bizonyos relációs séma normálformájának a megállapítását a \lstinline{getNormalForm} metódussal valósítottuk meg.
+Tekintettel a \ref{eq:nf} képletekre, egy bizonyos relációs séma normálformájának a megállapítását a \lstinline{getNormalForm} metódussal valósítottuk meg.
 
 \linespread{1}
 \begin{lstlisting}[language=Java]
@@ -194,7 +194,7 @@ public NormalForm getNormalForm() {
 
 \section{Szintézis algoritmusának a megvalósítása}
 
-A szintézis algoritmusának számítógépes megvalósítását a(z) ~\ref{fig:synseq} ábra tükrözi. Felhasználói beavatkozás, ami befolyásolná az algoritmus kimenetelét, nem történik a lefuttatás alatt.
+A szintézis algoritmusának számítógépes megvalósítását a(z) \ref{fig:synseq} ábra tükrözi. Felhasználói beavatkozás, ami befolyásolná az algoritmus kimenetelét, nem történik a lefuttatás alatt.
 
 \begin{figure}
     \centering
@@ -203,7 +203,7 @@ A szintézis algoritmusának számítógépes megvalósítását a(z) ~\ref{fig:
     \label{fig:synseq}
 \end{figure}
 
-A szintézis algoritmusa alapján a legfontosabb lépés a minimális függéshalmaz kiszámolása. Ezt három lépésből tudjuk megtenni: A minimális függéshalmazban a függőségek jobboldali attribútumhalmazában csak egyetlen attribútum található (~\ref{eq:syn1-2} képlet), a függőségek teljes függőségek (~\ref{eq:syn1-3} képlet), valamint nincs olyan függőség, amelyik elhagyható (~\ref{eq:syn1-4} képlet).
+A szintézis algoritmusa alapján a legfontosabb lépés a minimális függéshalmaz kiszámolása. Ezt három lépésből tudjuk megtenni: A minimális függéshalmazban a függőségek jobboldali attribútumhalmazában csak egyetlen attribútum található (\ref{eq:syn1-2} képlet), a függőségek teljes függőségek (\ref{eq:syn1-3} képlet), valamint nincs olyan függőség, amelyik elhagyható (\ref{eq:syn1-4} képlet).
 
 \begin{enumerate}
 
@@ -254,7 +254,7 @@ reducedCanonicalSet.removeAll(setToRemove);
 
 A partíciók kialakításához először egy \lstinline{HashMap} kollekcióba rendeztük a függőségeket, a baloldali attribútumhalmazaitól függően. Ezután ezeknek a baloldali attribútumhalmazoknak kiszámoltuk a zártját, és amennyiben azok megegyeztek, összevontuk ezeket a partíciókat. Ezek az algoritmusok viszonylag egyszerűek, ezért nem kerülnek bemutatásra ebben a dolgozatban.
 
-Ezután következik az összevonás által keletkezett potenciálisan tranzitív függőségek eltávolítása a partíciókból. Ennek kiszámolása érdekében a következőképpen létrehozzuk a $J$ függőséghalmazt (~\ref{eq:syn2-6} képlet).
+Ezután következik az összevonás által keletkezett potenciálisan tranzitív függőségek eltávolítása a partíciókból. Ennek kiszámolása érdekében a következőképpen létrehozzuk a $J$ függőséghalmazt (\ref{eq:syn2-6} képlet).
 
 \linespread{1}
 \begin{lstlisting}[language=Java]
@@ -267,9 +267,9 @@ for(Partition partition: partitions) {
 }
 \end{lstlisting}
 
-A \lstinline{descartesProductNonTrivial} metódus kiszámolja az összevont partícióknak az ún. permutációs (nem triviális) függőséghalmazát (~\ref{eq:syn2-7} képlet). Azaz, ha $A$, $B$ és $C$ kulccsal rendelkező partíciókat vontunk össze, akkor ez a metódus eredményként $A \to B$, $B \to A$, $A \to C$, $C \to A$, $B \to C$ és $C \to B$ függőségeket eredményezi. Majd ezeken a függőségeken jobb oldali egyszerűsítést végzünk annak érdekében, hogy a jobboldali attribútumhalmaz csak egy attribútumot tartalmazzon.
+A \lstinline{descartesProductNonTrivial} metódus kiszámolja az összevont partícióknak az ún. permutációs (nem triviális) függőséghalmazát (\ref{eq:syn2-7} képlet). Azaz, ha $A$, $B$ és $C$ kulccsal rendelkező partíciókat vontunk össze, akkor ez a metódus eredményként $A \to B$, $B \to A$, $A \to C$, $C \to A$, $B \to C$ és $C \to B$ függőségeket eredményezi. Majd ezeken a függőségeken jobb oldali egyszerűsítést végzünk annak érdekében, hogy a jobboldali attribútumhalmaz csak egy attribútumot tartalmazzon.
 
-A tranzitív függőségek eltávolításához befejező lépésként megalkotjuk az $M$ függőséghalmazt (~\ref{eq:syn2-8} képlet).
+A tranzitív függőségek eltávolításához befejező lépésként megalkotjuk az $M$ függőséghalmazt (\ref{eq:syn2-8} képlet).
 
 \linespread{1}
 \begin{lstlisting}[language=Java]
@@ -324,7 +324,7 @@ if(!relations.hasKey(initialRelation.getKeys())) {
 
 \section{Dekompozíció algoritmusának a megvalósítása}
 
-A dekompozíció első lépése a megfelelő függőség kiválasztása. Ezt a függőséget háromféle kritérium alapján tudjuk kiválasztani. A következő metódusok azt vizsgálják, hogy egy adott függőség megfelel-e a P1 (~\ref{eq:p1}), P2 (~\ref{eq:p2}) illetve a P3 (~\ref{eq:p3}) kritériumnak. 
+A dekompozíció első lépése a megfelelő függőség kiválasztása. Ezt a függőséget háromféle kritérium alapján tudjuk kiválasztani. A következő metódusok azt vizsgálják, hogy egy adott függőség megfelel-e a P1 (\ref{eq:p1}), P2 (\ref{eq:p2}) illetve a P3 (\ref{eq:p3}) kritériumnak. 
 
 \linespread{1}
 \begin{lstlisting}[language=Java]
@@ -360,9 +360,9 @@ public boolean satisfiesP3(FunctionalDependency fd) {
 }
 \end{lstlisting}
 
-A szintézis algoritmussal ellentétben, a dekompozíció algoritmusánál a felhasználó is beleszólhat az algoritmus lefolyásába. Ezt oly módon teszi, hogy a felkínált függőségekből (melyek lehetőleg minél nagyobb kritériumi szintet teljesítenek) választ egyet. A(z) ~\ref{fig:dectree} ábra bemutatja, hogy minderre a \lstinline{decompose} metódus elején kerül sor – a \lstinline{user selects functional dependency} üzenettel. Az algoritmus interaktív mivolta úgy valósul meg, hogy a program a standard kimenetre nyomtatja a választható függőségeket, a felhasználó pedig a billentyűzet segítségével kiválasztja a neki megfelelő függőséget. Az algoritmus automatikus változata ezt a választás lehetőségét átugorja, és találomra választ egy függőséget a felkínáltak közül.
+A szintézis algoritmussal ellentétben, a dekompozíció algoritmusánál a felhasználó is beleszólhat az algoritmus lefolyásába. Ezt oly módon teszi, hogy a felkínált függőségekből (melyek lehetőleg minél nagyobb kritériumi szintet teljesítenek) választ egyet. A(z) \ref{fig:dectree} ábra bemutatja, hogy minderre a \lstinline{decompose} metódus elején kerül sor – a \lstinline{user selects functional dependency} üzenettel. Az algoritmus interaktív mivolta úgy valósul meg, hogy a program a standard kimenetre nyomtatja a választható függőségeket, a felhasználó pedig a billentyűzet segítségével kiválasztja a neki megfelelő függőséget. Az algoritmus automatikus változata ezt a választás lehetőségét átugorja, és találomra választ egy függőséget a felkínáltak közül.
 
-Mivel a dekompozíció lépéseiben az algoritmus az aktuális relációs sémát két relációs sémára válassza szét (~\ref{eq:r1r2} képlet), innen ered az ötlet, hogy a dekompozíció megvalósításához elég létrehozni egy ún. dekompozíciós fát. Ennek a fának a csomópontjai relációs sémák lesznek, a levelei pedig a dekompozíció eredményeként létrejött relációs sémahalmazt alkotják.
+Mivel a dekompozíció lépéseiben az algoritmus az aktuális relációs sémát két relációs sémára válassza szét (\ref{eq:r1r2} képlet), innen ered az ötlet, hogy a dekompozíció megvalósításához elég létrehozni egy ún. dekompozíciós fát. Ennek a fának a csomópontjai relációs sémák lesznek, a levelei pedig a dekompozíció eredményeként létrejött relációs sémahalmazt alkotják.
 
 \begin{figure}
     \centering
@@ -373,7 +373,7 @@ Mivel a dekompozíció lépéseiben az algoritmus az aktuális relációs sémá
 
 A dekompozíciós fa létrejöttéhez a \lstinline{decompose} metódus rekurzív előhívása szükséges a relációs séma dekomponált gyermekcsomópontjain. Ez a folyamat addig folytatódik, amíg nem kapunk olyan relációs sémákat, amelyek teljesítik a \textit{BCNF} normálformát.
 
-Miután létrehoztuk az ún. dekompozíciós fát, ki kell értékelni azt. Ezt szintén rekurzív módszerekkel oldottuk meg (~\ref{fig:decomposition} ábra). A fa leveleinek a begyűjtése után ki kell vizsgálni, hogy az azonos kulcsokkal rendelkező relációs sémákat összevonjuk, majd leellenőrizzük a veszteségmentes sémafelbontás feltételeit. Ezt hasonlóképp végezzük el, mint a szintézis algoritmusa során. 
+Miután létrehoztuk az ún. dekompozíciós fát, ki kell értékelni azt. Ezt szintén rekurzív módszerekkel oldottuk meg (\ref{fig:decomposition} ábra). A fa leveleinek a begyűjtése után ki kell vizsgálni, hogy az azonos kulcsokkal rendelkező relációs sémákat összevonjuk, majd leellenőrizzük a veszteségmentes sémafelbontás feltételeit. Ezt hasonlóképp végezzük el, mint a szintézis algoritmusa során. 
 
 \begin{figure}
     \centering
@@ -424,7 +424,7 @@ A \lstinline{<task>} megjelölés helyett a feladatsor fájljának az útvonalá
 	
 \section{Szoftvertesztek megvalósítása}
 
-A \textit{Java} programnyelvnek rendeltetésszerű tesztelési munkakeretét használtuk a dolgozatban. A munkakeret neve \textit{JUnit}, ami unit-tesztek írását és lefuttatását teszi lehetővé. A dolgozat ~\ref{ch:elmelet}. fejezetében felsorolt relációs műveletek és algoritmusok mindegyike szerepel a teszt esetekben. A tesztek érvényességét feladatgyűjteményből \parencite{kordic2018} származtatott feladatok és megoldásaik szavatolják. A tesztek elindításához a következő parancsot kell végrehajtani:
+A \textit{Java} programnyelvnek rendeltetésszerű tesztelési munkakeretét használtuk a dolgozatban. A munkakeret neve \textit{JUnit}, ami unit-tesztek írását és lefuttatását teszi lehetővé. A dolgozat \ref{ch:elmelet}. fejezetében felsorolt relációs műveletek és algoritmusok mindegyike szerepel a teszt esetekben. A tesztek érvényességét feladatgyűjteményből \parencite{kordic2018} származtatott feladatok és megoldásaik szavatolják. A tesztek elindításához a következő parancsot kell végrehajtani:
 
 \linespread{1}
 \begin{lstlisting}[language=sh]
